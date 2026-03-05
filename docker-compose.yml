@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: cafeina_db
+    restart: always
+    environment:
+      POSTGRES_USER: cafeina
+      POSTGRES_PASSWORD: cafeina
+      POSTGRES_DB: cafeina
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./cafeina-api
+    container_name: cafeina-api
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env.api
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./cafeina-web
+      args:
+        CAFEINA_API_URL: ${CAFEINA_API_URL}
+    container_name: cafeina-web
+    restart: always
+    depends_on:
+      - backend
+    env_file:
+      - .env.web
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
