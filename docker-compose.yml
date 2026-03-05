@@ -15,7 +15,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    build: ./cafeina-api
+    image: 851725290047.dkr.ecr.us-east-1.amazonaws.com/cafeina/api:latest
     container_name: cafeina-api
     restart: always
     depends_on:
@@ -26,10 +26,7 @@ services:
       - "8000:8000"
 
   frontend:
-    build:
-      context: ./cafeina-web
-      args:
-        CAFEINA_API_URL: ${CAFEINA_API_URL}
+    image: 851725290047.dkr.ecr.us-east-1.amazonaws.com/cafeina/web:latest
     container_name: cafeina-web
     restart: always
     depends_on:
